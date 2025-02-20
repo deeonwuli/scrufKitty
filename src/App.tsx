@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState } from "react";
 import "./App.css";
 import styled from "styled-components";
+import Modal from "./components/modal/Modal";
 
 const word: string = "duby";
 const alphabets: string[] = Array.from({ length: 26 }, (_, i) =>
   String.fromCharCode(97 + i)
 );
+const NUMBER_OF_LIVES = 3;
 
 function App() {
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
@@ -15,9 +17,9 @@ function App() {
     [selectedLetters]
   );
 
-  const isWordGuessed = useMemo(
-    () => word.split("").every((letter) => isLetterSelected(letter)),
-    [isLetterSelected]
+  const incorrectGuesses = useMemo(
+    () => selectedLetters.filter((letter) => !word.includes(letter)).length,
+    [selectedLetters]
   );
 
   const handleLetterClick = useCallback(
@@ -25,11 +27,39 @@ function App() {
     []
   );
 
-  console.log({ selectedLetters });
+  const onSave = useCallback(() => {
+    setSelectedLetters([]);
+  }, []);
+
+  const isWordGuessed = useMemo(() => {
+    const allLettersSelected = word
+      .split("")
+      .every((letter) => isLetterSelected(letter));
+    const tooManyIncorrectGuesses = incorrectGuesses >= NUMBER_OF_LIVES;
+
+    return !tooManyIncorrectGuesses && !allLettersSelected
+      ? undefined
+      : tooManyIncorrectGuesses
+      ? false
+      : true;
+  }, [incorrectGuesses, isLetterSelected]);
 
   return (
     <Container>
       <HangmanContainer />
+      <LivesContainer>
+        {Array.from({ length: NUMBER_OF_LIVES }).map((_, index) => (
+          <span
+            key={index}
+            style={{
+              backgroundColor:
+                index < NUMBER_OF_LIVES - incorrectGuesses ? "none" : "red",
+            }}
+          >
+            ❤️
+          </span>
+        ))}
+      </LivesContainer>
       <WordContainer>
         {word
           .split("")
@@ -53,7 +83,18 @@ function App() {
         ))}
       </LetterContainer>
 
-      {isWordGuessed && <p>You Win! 🎉</p>}
+      {isWordGuessed !== undefined && (
+        <Modal onSave={onSave}>
+          {isWordGuessed === true ? (
+            <p>You Win! 🎉</p>
+          ) : (
+            <>
+              <p>You lost 😔</p>
+              <p>The correct word is "{word}"</p>
+            </>
+          )}
+        </Modal>
+      )}
     </Container>
   );
 }
@@ -80,6 +121,21 @@ const HangmanContainer = styled.div`
   margin: 10px;
   padding: 10px;
   background-color: rgb(240, 240, 240);
+`;
+
+const LivesContainer = styled.div`
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  width: 5rem;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 `;
 
 const WordContainer = styled.div`
