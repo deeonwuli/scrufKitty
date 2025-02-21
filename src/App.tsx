@@ -2,14 +2,15 @@ import { useCallback, useMemo, useState } from "react";
 import "./App.css";
 import styled from "styled-components";
 import Modal from "./components/modal/Modal";
+import { useRandomWord } from "./hooks/useRandomWord";
 
-const word: string = "duby";
 const alphabets: string[] = Array.from({ length: 26 }, (_, i) =>
   String.fromCharCode(97 + i)
 );
 const NUMBER_OF_LIVES = 3;
 
 function App() {
+  const { randomWord, getRandomWord } = useRandomWord();
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
 
   const isLetterSelected = useCallback(
@@ -18,8 +19,9 @@ function App() {
   );
 
   const incorrectGuesses = useMemo(
-    () => selectedLetters.filter((letter) => !word.includes(letter)).length,
-    [selectedLetters]
+    () =>
+      selectedLetters.filter((letter) => !randomWord.includes(letter)).length,
+    [randomWord, selectedLetters]
   );
 
   const handleLetterClick = useCallback(
@@ -29,11 +31,13 @@ function App() {
 
   const onSave = useCallback(() => {
     setSelectedLetters([]);
-  }, []);
+    getRandomWord();
+  }, [getRandomWord]);
 
   const isWordGuessed = useMemo(() => {
-    const allLettersSelected = word
+    const allLettersSelected = randomWord
       .split("")
+      .filter((letter) => letter !== " ")
       .every((letter) => isLetterSelected(letter));
     const tooManyIncorrectGuesses = incorrectGuesses >= NUMBER_OF_LIVES;
 
@@ -42,11 +46,13 @@ function App() {
       : tooManyIncorrectGuesses
       ? false
       : true;
-  }, [incorrectGuesses, isLetterSelected]);
+  }, [incorrectGuesses, randomWord, isLetterSelected]);
+
+  if (!randomWord) return <p>Loading...</p>;
 
   return (
     <Container>
-      <HangmanContainer />
+      <GameProgressContainer />
       <LivesContainer>
         {Array.from({ length: NUMBER_OF_LIVES }).map((_, index) => (
           <span
@@ -61,13 +67,13 @@ function App() {
         ))}
       </LivesContainer>
       <WordContainer>
-        {word
+        {randomWord
           .split("")
           .map((letter, index) =>
             isLetterSelected(letter) ? (
               <span key={index}>{letter} </span>
             ) : (
-              <span key={index}>_ </span>
+              <span key={index}>{letter === " " ? "  " : "_"} </span>
             )
           )}
       </WordContainer>
@@ -90,7 +96,7 @@ function App() {
           ) : (
             <>
               <p>You lost 😔</p>
-              <p>The correct word is "{word}"</p>
+              <p>The correct word is "{randomWord}"</p>
             </>
           )}
         </Modal>
@@ -108,9 +114,15 @@ const Container = styled.div`
   flex-direction: column;
   width: 100vw;
   gap: 2rem 0;
+  overflow: hidden;
+  position: relative;
+
+  @media (max-width: 768px) {
+    margin: 2rem;
+  }
 `;
 
-const HangmanContainer = styled.div`
+const GameProgressContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -136,6 +148,11 @@ const LivesContainer = styled.div`
   font-weight: bold;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   z-index: 1;
+
+  @media (max-width: 768px) {
+    top: 0.25rem;
+    right: 0.25rem;
+  }
 `;
 
 const WordContainer = styled.div`
@@ -152,6 +169,10 @@ const LetterContainer = styled.div`
   grid-template-columns: repeat(7, 1fr);
   justify-content: center;
   gap: 1rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
 `;
 
 const Letter = styled.p<{ isLetterSelected: boolean }>`

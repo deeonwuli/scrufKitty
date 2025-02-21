@@ -44,6 +44,7 @@ const ModalContent = styled.div`
   gap: 1rem;
   align-items: center;
   text-align: center;
+  min-width: 24rem;
 `;
 
 const ButtonContainer = styled.div`
