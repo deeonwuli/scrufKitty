@@ -70,10 +70,14 @@ function App() {
         {randomWord
           .split("")
           .map((letter, index) =>
-            isLetterSelected(letter) ? (
-              <span key={index}>{letter} </span>
+            /[a-zA-Z]/.test(letter) ? (
+              isLetterSelected(letter) ? (
+                <span key={index}>{letter} </span>
+              ) : (
+                <span key={index}>_ </span>
+              )
             ) : (
-              <span key={index}>{letter === " " ? "  " : "_"} </span>
+              <span key={index}>{letter} </span>
             )
           )}
       </WordContainer>
@@ -169,6 +173,7 @@ const LetterContainer = styled.div`
   grid-template-columns: repeat(7, 1fr);
   justify-content: center;
   gap: 1rem;
+  place-items: center;
 
   @media (max-width: 768px) {
     grid-template-columns: repeat(5, 1fr);

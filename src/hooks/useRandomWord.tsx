@@ -1,28 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchData } from "../data/fetchData";
 
-type RandomWordState = {
+export function useRandomWord(): {
   randomWord: string;
   getRandomWord: () => void;
-};
-
-export function useRandomWord(): RandomWordState {
+} {
   const [randomWord, setRandomWord] = useState<string>("");
 
-  const getRandomWord = useCallback(async () => {
+  async function getRandomWord() {
     try {
-      const { word } = await fetchData<{ word: string }>("/words", {
-        random: "true",
-      });
+      const words = await fetchData<string[]>("/word");
+      const word = words[0];
       setRandomWord(word);
     } catch (error) {
       console.error("Fetch error: ", error);
     }
-  }, []);
-
+  }
   useEffect(() => {
     getRandomWord();
-  }, [getRandomWord]);
+  }, []);
 
   return { randomWord: randomWord, getRandomWord: getRandomWord };
 }
