@@ -11,10 +11,8 @@ export default function Modal(props: {
       <ModalContent>
         <h3>Game Over</h3>
         {children}
-        <p>Would you like to play again?</p>
         <ButtonContainer>
-          <button onClick={onSave}>Yes</button>
-          <button>No</button>
+          <button onClick={onSave}>Play again</button>
         </ButtonContainer>
       </ModalContent>
     </ModalOverlay>
