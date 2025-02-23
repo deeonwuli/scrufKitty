@@ -55,8 +55,8 @@ const ButtonContainer = styled.div`
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 5px;
-    background-color: rgb(240, 175, 203);
-    color: #ffffff;
+    background-color: ${(props) => props.theme.colors.pink300};
+    color: ${(props) => props.theme.colors.white};
     cursor: pointer;
     font-weight: bold;
   }
