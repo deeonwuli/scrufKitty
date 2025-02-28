@@ -1,13 +1,12 @@
 import styled from "styled-components";
 import GameProgress from "./gameProgress/GameProgress";
-import Lives from "./lives/Lives";
 import Word from "./word/Word";
 import Modal from "../modal/Modal";
 import { useRandomWord } from "../../hooks/useRandomWord";
 import { useCallback, useMemo, useState } from "react";
 import CircleLoader from "../loader/CircleLoader";
 
-export const NUMBER_OF_LIVES = 3;
+export const NUMBER_OF_LIVES = 5;
 
 export default function Game() {
   const { randomWord, getRandomWord } = useRandomWord();
@@ -52,8 +51,7 @@ export default function Game() {
 
   return (
     <Container>
-      <GameProgress />
-      <Lives incorrectGuesses={incorrectGuesses} />
+      <GameProgress incorrectGuesses={incorrectGuesses} />
       <Word
         randomWord={randomWord}
         isLetterSelected={isLetterSelected}
@@ -63,7 +61,10 @@ export default function Game() {
       {isWordGuessed !== undefined && (
         <Modal onSave={onSave}>
           {isWordGuessed === true ? (
-            <p>You Win! 🎉</p>
+            <>
+              <p>You Win! 🎉</p>
+              <p>The word is "{randomWord}"</p>
+            </>
           ) : (
             <>
               <p>You lost 😔</p>
