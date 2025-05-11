@@ -1,93 +1,57 @@
 import styled from "styled-components";
-import GameProgress from "./gameProgress/GameProgress";
-import Word from "./word/Word";
-import Modal from "../modal/Modal";
 import { useRandomWord } from "../../hooks/useRandomWord";
-import { useCallback, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import CircleLoader from "../loader/CircleLoader";
+import clouds from "../../assets/clouds.png";
+import { GamePlay } from "./game-play/GamePlay";
+import { IntroScreen } from "./intro/IntroScreen";
 
 export const NUMBER_OF_LIVES = 5;
 
 export default function Game() {
-  const { randomWord, getRandomWord } = useRandomWord();
-  const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
+  const { randomWord: randomWordResponse, getRandomWord } = useRandomWord();
+  const [stage, setStage] = useState<"intro" | "game">("intro");
 
-  const incorrectGuesses = useMemo(
-    () =>
-      selectedLetters.filter((letter) => !randomWord.includes(letter)).length,
-    [randomWord, selectedLetters]
-  );
-
-  const isLetterSelected = useCallback(
-    (alphabet: string) => selectedLetters.includes(alphabet),
-    [selectedLetters]
-  );
-
-  const isWordGuessed = useMemo(() => {
-    const allLettersSelected = randomWord
-      .split("")
-      .filter((letter) => letter !== " ")
-      .every((letter) => isLetterSelected(letter));
-    const tooManyIncorrectGuesses = incorrectGuesses >= NUMBER_OF_LIVES;
-
-    return !tooManyIncorrectGuesses && !allLettersSelected
-      ? undefined
-      : tooManyIncorrectGuesses
-      ? false
-      : true;
-  }, [incorrectGuesses, randomWord, isLetterSelected]);
-
-  const handleLetterClick = useCallback(
-    (letter: string) => setSelectedLetters((prev) => [...prev, letter]),
-    []
-  );
-
-  const onSave = useCallback(() => {
-    setSelectedLetters([]);
+  useEffect(() => {
     getRandomWord();
   }, [getRandomWord]);
 
-  if (!randomWord) return <CircleLoader />;
+  if (!randomWordResponse) return <CircleLoader />;
 
   return (
-    <Container>
-      <GameProgress incorrectGuesses={incorrectGuesses} />
-      <Word
-        randomWord={randomWord}
-        isLetterSelected={isLetterSelected}
-        handleLetterClick={handleLetterClick}
-      />
-
-      {isWordGuessed !== undefined && (
-        <Modal onSave={onSave}>
-          {isWordGuessed === true ? (
-            <>
-              <p>You Win! 🎉</p>
-              <p>The word is "{randomWord}"</p>
-            </>
-          ) : (
-            <>
-              <p>You lost 😔</p>
-              <p>The correct word is "{randomWord}"</p>
-            </>
-          )}
-        </Modal>
+    <StyledDiv>
+      {stage === "intro" ? (
+        <IntroScreen goToGame={() => setStage("game")} />
+      ) : (
+        <GamePlay
+          randomWord={randomWordResponse}
+          onRestart={() => getRandomWord()}
+        />
       )}
-    </Container>
+      <StyledClouds src={clouds} alt="clouds" />
+    </StyledDiv>
   );
 }
 
-const Container = styled.div`
+export const StyledDiv = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
   width: 100vw;
+  height: 100vh;
   gap: 2rem 0;
-  overflow: hidden;
   position: relative;
+  background: linear-gradient(180deg, #ffc3c3 0%, #fff9cf 85.58%);
 
   @media (max-width: 768px) {
     margin: 2rem;
   }
+`;
+
+const StyledClouds = styled.img`
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100vw;
 `;

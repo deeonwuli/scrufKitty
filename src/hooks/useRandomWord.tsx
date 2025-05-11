@@ -1,24 +1,38 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { fetchData } from "../data/fetchData";
 
+export type RandomWord = {
+  word: string;
+  definition: string;
+  pronunciation: string;
+};
+
 export function useRandomWord(): {
-  randomWord: string;
+  randomWord: RandomWord | undefined;
   getRandomWord: () => void;
 } {
-  const [randomWord, setRandomWord] = useState<string>("");
+  const [randomWord, setRandomWord] = useState<RandomWord>();
 
-  async function getRandomWord() {
+  const getRandomWord = useCallback(async () => {
     try {
-      const words = await fetchData<string[]>("/word");
-      const word = words[0];
-      setRandomWord(word);
+      const apiRandomWord = await fetchData<RandomWord>("/word");
+      const randomWord = {
+        word: apiRandomWord.word.toLowerCase(),
+        definition: apiRandomWord.definition,
+        pronunciation: apiRandomWord.pronunciation,
+      };
+      setRandomWord(randomWord);
     } catch (error) {
       console.error("Fetch error: ", error);
+      setRandomWord(defaultWord);
     }
-  }
-  useEffect(() => {
-    getRandomWord();
   }, []);
 
   return { randomWord: randomWord, getRandomWord: getRandomWord };
 }
+
+const defaultWord: RandomWord = {
+  word: "Neutrosophy",
+  definition: "Study of the origin and nature of philosophical neutralities",
+  pronunciation: "Neutrosof",
+};

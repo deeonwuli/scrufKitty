@@ -28,7 +28,7 @@ const GameProgressIcon = (props: { incorrectGuesses: number }) => {
     case 5:
       return <StyledImage src={full} alt="full" />;
     default:
-      return <StyledImage src={full} alt="full" />;
+      return null;
   }
 };
 
@@ -36,10 +36,10 @@ const GameProgressContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 40vh;
-  width: 20rem;
+  height: 30vh;
   margin: 10px;
   padding: 10px;
+  z-index: 1;
 `;
 
 const StyledImage = styled.img`

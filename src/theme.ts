@@ -12,9 +12,9 @@ export const theme = {
     yellow200: "#F4E4BA",
     yellow300: "#FBB13C",
 
-    salmon100: "#E5A9A9",
+    salmon100: "#FFBE93",
     salmon200: "#FFA69E",
-    salmon300: "#EE9293",
+    salmon300: "#E3836B",
 
     pink100: "#EFCFE3",
     pink200: "#EA9AB2",
