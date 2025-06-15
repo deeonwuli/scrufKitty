@@ -149,7 +149,7 @@ const useModalVisibility = (
       const timer = setTimeout(() => setSuccessModalVisibility(true), 3000);
       return () => clearTimeout(timer);
     } else if (isIncorrectGuess) {
-      const timer = setTimeout(() => setFailureModalVisibility(true), 2000);
+      const timer = setTimeout(() => setFailureModalVisibility(true), 1000);
       return () => clearTimeout(timer);
     }
   }, [isCorrectGuess, isIncorrectGuess]);
