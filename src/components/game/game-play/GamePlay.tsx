@@ -39,37 +39,36 @@ export function GamePlay(props: {
     openPauseModal,
   } = useGameActions();
 
+  const {
+    showFailureModal,
+    showSuccessModal,
+    closeFailureModal,
+    closeSuccessModal,
+  } = useModalVisibility(isCorrectGuess, isIncorrectGuess);
+
   const resetGame = useCallback(() => {
     clearSelection();
     hideHint();
     closePauseModal();
+    closeFailureModal();
+    closeSuccessModal();
     onRestart();
-  }, [clearSelection, closePauseModal, hideHint, onRestart]);
+  }, [
+    clearSelection,
+    closeFailureModal,
+    closePauseModal,
+    closeSuccessModal,
+    hideHint,
+    onRestart,
+  ]);
 
   const quitGame = useCallback(() => {
     onRestart();
     onQuit();
   }, [onQuit, onRestart]);
 
-  const { showFailureModal, showSuccessModal } = useModalVisibility(
-    isCorrectGuess,
-    isIncorrectGuess
-  );
-
   return (
     <StyledDiv>
-      <GameProgress
-        incorrectGuesses={incorrectGuesses}
-        isCorrectGuess={isCorrectGuess}
-        isIncorrectGuess={isIncorrectGuess}
-      />
-      <Word
-        handleLetterClick={handleLetterClick}
-        isLetterSelected={isLetterSelected}
-        randomWord={props.randomWord}
-        showHint={showHint}
-      />
-
       <IconButton
         onClick={openPauseModal}
         position={{ top: "2rem", right: "2rem" }}
@@ -90,6 +89,19 @@ export function GamePlay(props: {
         <HintIcon />
       </IconButton>
 
+      <GameProgress
+        incorrectGuesses={incorrectGuesses}
+        isCorrectGuess={isCorrectGuess}
+        isIncorrectGuess={isIncorrectGuess}
+      />
+      <Word
+        handleLetterClick={handleLetterClick}
+        isCorrectGuess={isCorrectGuess}
+        isLetterSelected={isLetterSelected}
+        randomWord={props.randomWord}
+        showHint={showHint}
+      />
+
       {showPauseModal && (
         <Modal
           headerText="Paused"
@@ -106,7 +118,7 @@ export function GamePlay(props: {
           headerText="You win!"
           modalComponents={[
             { type: "text", content: `The word is "${word}"` },
-            { type: "button", content: "Restart", action: resetGame },
+            { type: "button", content: "Replay", action: resetGame },
             { type: "button", content: "Quit", action: quitGame },
           ]}
         />
@@ -116,7 +128,7 @@ export function GamePlay(props: {
           headerText="You lost"
           modalComponents={[
             { type: "text", content: `The correct word is "${word}"` },
-            { type: "button", content: "Restart", action: resetGame },
+            { type: "button", content: "Replay", action: resetGame },
             { type: "button", content: "Quit", action: quitGame },
           ]}
         />
@@ -137,12 +149,27 @@ const useModalVisibility = (
       const timer = setTimeout(() => setSuccessModalVisibility(true), 3000);
       return () => clearTimeout(timer);
     } else if (isIncorrectGuess) {
-      const timer = setTimeout(() => setFailureModalVisibility(true), 3000);
+      const timer = setTimeout(() => setFailureModalVisibility(true), 2000);
       return () => clearTimeout(timer);
     }
   }, [isCorrectGuess, isIncorrectGuess]);
 
-  return { showFailureModal, showSuccessModal };
+  const closeSuccessModal = useCallback(
+    () => setSuccessModalVisibility(false),
+    []
+  );
+
+  const closeFailureModal = useCallback(
+    () => setFailureModalVisibility(false),
+    []
+  );
+
+  return {
+    showFailureModal,
+    showSuccessModal,
+    closeFailureModal,
+    closeSuccessModal,
+  };
 };
 
 const StyledDiv = styled.div`

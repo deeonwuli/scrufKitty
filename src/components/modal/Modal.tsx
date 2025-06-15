@@ -26,13 +26,15 @@ export default function Modal(props: ModalProps) {
     <ModalOverlay>
       <ModalContent>
         <ModalWrapper>
-          <StyledText>{headerText}</StyledText>
+          <StyledHeader>{headerText}</StyledHeader>
 
           {modalComponents.map((modalProperty) => {
             switch (modalProperty.type) {
               case "text":
                 return (
-                  <p key={modalProperty.content}>{modalProperty.content}</p>
+                  <StyledText key={modalProperty.content}>
+                    {modalProperty.content}
+                  </StyledText>
                 );
               case "button":
                 return (
@@ -87,7 +89,7 @@ const ModalWrapper = styled.div`
   justify-content: space-between;
 `;
 
-const StyledText = styled.p`
+const StyledHeader = styled.p`
   background-color: ${(props) => props.theme.colors.pink100};
   color: ${(props) => props.theme.colors.white};
   font-size: 2.5rem;
@@ -95,4 +97,15 @@ const StyledText = styled.p`
   border-radius: 2.5rem;
   width: 100%;
   text-transform: uppercase;
+  font-family: "Puritan", sans-serif;
+  letter-spacing: 0.1rem;
+  -webkit-text-stroke: 2px #a36263;
+  text-shadow: 0px 3px #c46d6d70;
+`;
+
+const StyledText = styled.p`
+  color: ${(props) => props.theme.colors.white};
+  font-size: 1.5rem;
+  font-weight: 500;
+  font-family: "Albert Sans", sans-serif;
 `;

@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import { StyledDiv } from "../Game";
+import gameTitle from "../../../assets/scruffKittyText.svg";
 
 export const IntroScreen = (props: { goToGame: () => void }) => {
   return (
     <StyledDiv>
-      <StyledTitle>Scruff Kitty</StyledTitle>
-      <StyledButton onClick={props.goToGame}>Play</StyledButton>
+      <img src={gameTitle} alt="Game title" />
+      <StyledButton onClick={props.goToGame}>
+        <span>Play</span>
+      </StyledButton>
     </StyledDiv>
   );
 };
@@ -24,11 +27,7 @@ export const StyledButton = styled.button`
   transition: background-color 0.3s ease;
   z-index: 1;
   min-width: 20rem;
-`;
-
-const StyledTitle = styled.h1`
-  font-size: 5.9375rem;
-  color: #ff367e;
-  text-transform: uppercase;
-  z-index: 1;
+  font-family: Poppins;
+  -webkit-text-stroke: 2px #d36588;
+  text-shadow: 0px 2px 4px #e27396;
 `;
