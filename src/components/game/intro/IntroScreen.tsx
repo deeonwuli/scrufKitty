@@ -74,7 +74,7 @@ export const StyledButton = styled.button`
   color: #fff;
   box-shadow: 0px 7px 1px 0px #d95e8a;
   border: none;
-  border-radius: 2rem;
+  border-radius: 2.5rem;
   padding: 1rem 5rem;
   cursor: pointer;
   font-size: 2.25rem;

@@ -32,20 +32,20 @@ const GameProgressIcon = (props: {
   const { incorrectGuesses, isCorrectGuess, isIncorrectGuess } = props;
 
   switch (true) {
-    case incorrectGuesses === 1:
-      return <StyledImage src={headImage} alt="head" />;
-    case incorrectGuesses === 2:
-      return <StyledImage src={headAndHand} alt="headAndHand" />;
-    case incorrectGuesses === 3:
-      return <StyledImage src={hands} alt="hands" />;
-    case incorrectGuesses === 4:
-      return <StyledImage src={full} alt="tailless" />;
-    case incorrectGuesses === 5:
-      return <StyledImage src={full} alt="full" />;
     case isCorrectGuess:
       return <StyledImage src={winner} alt="winner" />;
     case isIncorrectGuess:
       return <StyledImage src={loser} alt="loser" />;
+    case incorrectGuesses === 1 && (!isIncorrectGuess || !isCorrectGuess):
+      return <StyledImage src={headImage} alt="head" />;
+    case incorrectGuesses === 2 && (!isIncorrectGuess || !isCorrectGuess):
+      return <StyledImage src={headAndHand} alt="headAndHand" />;
+    case incorrectGuesses === 3 && (!isIncorrectGuess || !isCorrectGuess):
+      return <StyledImage src={hands} alt="hands" />;
+    case incorrectGuesses === 4 && (!isIncorrectGuess || !isCorrectGuess):
+      return <StyledImage src={full} alt="tailless" />;
+    case incorrectGuesses === 5 && (!isIncorrectGuess || !isCorrectGuess):
+      return <StyledImage src={full} alt="full" />;
     default:
       return null;
   }

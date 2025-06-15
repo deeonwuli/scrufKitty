@@ -27,8 +27,8 @@ export function HintIcon() {
       <path
         d="M26 50H37"
         stroke="white"
-        stroke-width="4"
-        stroke-linecap="round"
+        strokeWidth="4"
+        strokeLinecap="round"
       />
       <defs>
         <filter
@@ -38,9 +38,9 @@ export function HintIcon() {
           width="63"
           height="64"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
@@ -73,8 +73,8 @@ export function HintIcon() {
           y2="107.174"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stop-color="#FFD0E1" />
-          <stop offset="0.822115" stop-color="#FF367E" />
+          <stop stopColor="#FFD0E1" />
+          <stop offset="0.822115" stopColor="#FF367E" />
         </linearGradient>
       </defs>
     </svg>
