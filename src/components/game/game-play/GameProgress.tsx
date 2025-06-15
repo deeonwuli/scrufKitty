@@ -1,32 +1,51 @@
 import styled from "styled-components";
-import headImage from "../../../assets/game/head.png";
-import headAndHand from "../../../assets/game/headAndHand.png";
-import hands from "../../../assets/game/hands.png";
-import tailless from "../../../assets/game/tailless.png";
-import full from "../../../assets/game/full.png";
+import headImage from "../../../assets/game-progress/head.png";
+import headAndHand from "../../../assets//game-progress/headAndHand.png";
+import hands from "../../../assets//game-progress/hands.png";
+import full from "../../../assets//game-progress/full.png";
+import winner from "../../../assets/game-progress/winner.png";
+import loser from "../../../assets/game-progress/loser.png";
 
-export default function GameProgress(props: { incorrectGuesses: number }) {
-  const { incorrectGuesses } = props;
+export default function GameProgress(props: {
+  incorrectGuesses: number;
+  isCorrectGuess: boolean;
+  isIncorrectGuess: boolean;
+}) {
+  const { incorrectGuesses, isCorrectGuess, isIncorrectGuess } = props;
 
   return (
     <GameProgressContainer>
-      <GameProgressIcon incorrectGuesses={incorrectGuesses} />
+      <GameProgressIcon
+        incorrectGuesses={incorrectGuesses}
+        isCorrectGuess={isCorrectGuess}
+        isIncorrectGuess={isIncorrectGuess}
+      />
     </GameProgressContainer>
   );
 }
 
-const GameProgressIcon = (props: { incorrectGuesses: number }) => {
-  switch (props.incorrectGuesses) {
-    case 1:
+const GameProgressIcon = (props: {
+  incorrectGuesses: number;
+  isCorrectGuess: boolean;
+  isIncorrectGuess: boolean;
+}) => {
+  const { incorrectGuesses, isCorrectGuess, isIncorrectGuess } = props;
+
+  switch (true) {
+    case incorrectGuesses === 1:
       return <StyledImage src={headImage} alt="head" />;
-    case 2:
+    case incorrectGuesses === 2:
       return <StyledImage src={headAndHand} alt="headAndHand" />;
-    case 3:
+    case incorrectGuesses === 3:
       return <StyledImage src={hands} alt="hands" />;
-    case 4:
-      return <StyledImage src={tailless} alt="tailless" />;
-    case 5:
+    case incorrectGuesses === 4:
+      return <StyledImage src={full} alt="tailless" />;
+    case incorrectGuesses === 5:
       return <StyledImage src={full} alt="full" />;
+    case isCorrectGuess:
+      return <StyledImage src={winner} alt="winner" />;
+    case isIncorrectGuess:
+      return <StyledImage src={loser} alt="loser" />;
     default:
       return null;
   }
@@ -43,5 +62,5 @@ const GameProgressContainer = styled.div`
 `;
 
 const StyledImage = styled.img`
-  width: 100%;
+  width: 15rem;
 `;

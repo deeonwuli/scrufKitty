@@ -10,7 +10,7 @@ export const IntroScreen = (props: { goToGame: () => void }) => {
   );
 };
 
-const StyledButton = styled.button`
+export const StyledButton = styled.button`
   background-color: #ffb3b3;
   background: linear-gradient(360deg, #ff367e -125.53%, #ffd0e1 116.43%);
   color: #fff;
@@ -23,6 +23,7 @@ const StyledButton = styled.button`
   font-weight: 700;
   transition: background-color 0.3s ease;
   z-index: 1;
+  min-width: 20rem;
 `;
 
 const StyledTitle = styled.h1`

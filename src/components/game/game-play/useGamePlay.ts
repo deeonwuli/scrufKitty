@@ -2,13 +2,16 @@ import { useCallback, useMemo, useState } from "react";
 import { NUMBER_OF_LIVES } from "../Game";
 
 export function useGamePlay(word: string) {
-  const { showHint, onHintClick, setHintVisibility } = useGameHint();
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
 
   const clearSelection = useCallback(() => {
     setSelectedLetters([]);
-    setHintVisibility(false);
-  }, [setHintVisibility]);
+  }, []);
+
+  const handleLetterClick = useCallback(
+    (letter: string) => setSelectedLetters((prev) => [...prev, letter]),
+    []
+  );
 
   const incorrectGuesses = useMemo(
     () => selectedLetters.filter((letter) => !word.includes(letter)).length,
@@ -20,46 +23,39 @@ export function useGamePlay(word: string) {
     [selectedLetters]
   );
 
-  const isWordGuessed = useMemo(() => {
-    const allLettersSelected = word
-      .split("")
-      .filter((letter) => letter !== " ")
-      .every((letter) => isLetterSelected(letter));
-    const tooManyIncorrectGuesses = incorrectGuesses >= NUMBER_OF_LIVES;
-
-    return !tooManyIncorrectGuesses && !allLettersSelected
-      ? undefined
-      : tooManyIncorrectGuesses
-      ? false
-      : true;
-  }, [incorrectGuesses, isLetterSelected, word]);
-
-  const handleLetterClick = useCallback(
-    (letter: string) => setSelectedLetters((prev) => [...prev, letter]),
-    []
-  );
+  const allLettersSelected = word
+    .split("")
+    .filter((letter) => letter !== " ")
+    .every((letter) => isLetterSelected(letter));
+  const isCorrectGuess =
+    incorrectGuesses < NUMBER_OF_LIVES && allLettersSelected;
+  const isIncorrectGuess = incorrectGuesses >= NUMBER_OF_LIVES;
 
   return {
     incorrectGuesses: incorrectGuesses,
-    isWordGuessed: isWordGuessed,
-    showHint: showHint,
+    isCorrectGuess: isCorrectGuess,
+    isIncorrectGuess: isIncorrectGuess,
     clearSelection: clearSelection,
     isLetterSelected: isLetterSelected,
     handleLetterClick: handleLetterClick,
-    onHintClick: onHintClick,
   };
 }
 
-function useGameHint() {
+export function useGameActions() {
   const [showHint, setHintVisibility] = useState(false);
+  const [showPauseModal, setPauseModalVisibility] = useState(false);
 
-  const onHintClick = useCallback(() => {
-    setHintVisibility(true);
-  }, []);
+  const activateHint = useCallback(() => setHintVisibility(true), []);
+  const hideHint = useCallback(() => setHintVisibility(false), []);
+  const openPauseModal = useCallback(() => setPauseModalVisibility(true), []);
+  const closePauseModal = useCallback(() => setPauseModalVisibility(false), []);
 
   return {
     showHint: showHint,
-    onHintClick: onHintClick,
-    setHintVisibility: setHintVisibility,
+    showPauseModal: showPauseModal,
+    activateHint: activateHint,
+    closePauseModal: closePauseModal,
+    hideHint: hideHint,
+    openPauseModal: openPauseModal,
   };
 }

@@ -1,7 +1,8 @@
 type IconButtonProps = {
-  alt: string;
+  alt?: string;
+  children?: React.ReactNode;
   disabled?: boolean;
-  icon: string;
+  icon?: string;
   position?: {
     top?: string;
     left?: string;
@@ -12,7 +13,7 @@ type IconButtonProps = {
 };
 
 export function IconButton(props: IconButtonProps) {
-  const { alt, disabled, icon, position, onClick } = props;
+  const { alt, children, disabled, icon, position, onClick } = props;
 
   return (
     <button
@@ -24,19 +25,24 @@ export function IconButton(props: IconButtonProps) {
         bottom: position?.bottom,
         right: position?.right,
         border: "none",
+        cursor: "pointer",
       }}
       onClick={onClick}
       disabled={disabled}
     >
-      <img
-        style={{
-          height: "4rem",
-          cursor: "pointer",
-          transition: "transform 0.3s ease",
-        }}
-        src={icon}
-        alt={alt}
-      />
+      {children ? (
+        children
+      ) : (
+        <img
+          style={{
+            height: "4rem",
+            cursor: "pointer",
+            transition: "transform 0.3s ease",
+          }}
+          src={icon}
+          alt={alt}
+        />
+      )}
     </button>
   );
 }

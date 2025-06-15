@@ -32,7 +32,7 @@ export function useRandomWord(): {
 }
 
 const defaultWord: RandomWord = {
-  word: "Neutrosophy",
+  word: "neutrosophy",
   definition: "Study of the origin and nature of philosophical neutralities",
   pronunciation: "Neutrosof",
 };

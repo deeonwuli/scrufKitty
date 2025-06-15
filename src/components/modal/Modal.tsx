@@ -1,19 +1,48 @@
 import styled from "styled-components";
+import { StyledButton } from "../game/intro/IntroScreen";
 
-export default function Modal(props: {
-  children: React.ReactNode;
-  onSave: () => void;
-}) {
-  const { children, onSave } = props;
+type TextModalProps = {
+  type: "text";
+  content: string;
+};
+
+type ButtonModalProps = {
+  type: "button";
+  content: string;
+  action: () => void;
+};
+
+type ModalComponentType = TextModalProps | ButtonModalProps;
+
+type ModalProps = {
+  headerText: string;
+  modalComponents: ModalComponentType[];
+};
+
+export default function Modal(props: ModalProps) {
+  const { headerText, modalComponents } = props;
 
   return (
     <ModalOverlay>
       <ModalContent>
-        <h3>Game Over</h3>
-        {children}
-        <ButtonContainer>
-          <button onClick={onSave}>Play again</button>
-        </ButtonContainer>
+        <ModalWrapper>
+          <StyledText>{headerText}</StyledText>
+
+          {modalComponents.map((modalProperty) => {
+            switch (modalProperty.type) {
+              case "text":
+                return (
+                  <p key={modalProperty.content}>{modalProperty.content}</p>
+                );
+              case "button":
+                return (
+                  <StyledButton onClick={modalProperty.action}>
+                    {modalProperty.content}
+                  </StyledButton>
+                );
+            }
+          })}
+        </ModalWrapper>
       </ModalContent>
     </ModalOverlay>
   );
@@ -33,29 +62,37 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContent = styled.div`
-  background-color: white;
-  padding: 2rem;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  background-color: ${(props) => props.theme.colors.pink200};
+  border-radius: 6rem;
+  box-shadow: 0px 9px 6px 0px #00000040;
+  padding: 4rem 5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   align-items: center;
   text-align: center;
   min-width: 24rem;
+  height: 75%;
 `;
 
-const ButtonContainer = styled.div`
+const ModalWrapper = styled.div`
+  border: 2px dashed ${(props) => props.theme.colors.pink400};
+  border-radius: 4rem;
+  padding: 2rem;
+  width: 100%;
+  height: 100%;
   display: flex;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
 
-  button {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    background-color: ${(props) => props.theme.colors.pink300};
-    color: ${(props) => props.theme.colors.white};
-    cursor: pointer;
-    font-weight: bold;
-  }
+const StyledText = styled.p`
+  background-color: ${(props) => props.theme.colors.pink100};
+  color: ${(props) => props.theme.colors.white};
+  font-size: 2.5rem;
+  font-weight: 700;
+  border-radius: 2.5rem;
+  width: 100%;
+  text-transform: uppercase;
 `;

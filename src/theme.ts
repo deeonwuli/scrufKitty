@@ -16,10 +16,10 @@ export const theme = {
     salmon200: "#FFA69E",
     salmon300: "#E3836B",
 
-    pink100: "#EFCFE3",
-    pink200: "#EA9AB2",
+    pink100: "#FFC8DC",
+    pink200: "#F7ABC6",
     pink300: "#E27396",
-    pink400: "#D81159",
+    pink400: "#D95F8A",
 
     purple100: "#D66BA0",
     purple200: "#AF4D98",
